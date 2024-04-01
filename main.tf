@@ -7,29 +7,40 @@ provider "google" {
 variable "sa_key" {
   default =  ""
 }
+
 resource "google_container_cluster" "primary" {
   name     = "my-gke-cluster"
   location = "us-central1"
+
+  remove_default_node_pool = true
   initial_node_count       = 1
-  #enable_autopilot   = true
+}
 
-  node_pool {
-    name = "default-node-pool"
+resource "google_container_node_pool" "primary_preemptible_nodes" {
+  name       = "my-node-pool"
+  location   = "us-central1"
+  cluster    = google_container_cluster.primary.name
+  node_count = 1
 
-    node_config {
-      preemptible  = false
-      machine_type = "n1-standard-1"
+  node_config {
+    preemptible  = true
+    machine_type = "e2-medium"
 
-      oauth_scopes = [
-        "https://www.googleapis.com/auth/logging.write",
-        "https://www.googleapis.com/auth/monitoring",
-      ]
+    metadata = {
+      disable-legacy-endpoints = "true"
     }
 
-    management {
-      auto_repair  = true
-      auto_upgrade = true
-    }
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+
+
+    tags = ["my-tags"]
   }
 
+  management {
+    auto_upgrade = true
+    auto_repair  = true
+  }
 }
