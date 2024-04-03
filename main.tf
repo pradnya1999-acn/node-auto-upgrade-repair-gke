@@ -35,8 +35,8 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     tags = ["my-tags"]
   }
 
-  management {
-    auto_upgrade = false
-    auto_repair  = false
-  }
+  # management {
+  #  auto_upgrade = false
+  #  auto_repair  = false
+ # }
 }
