@@ -25,10 +25,10 @@ resource "google_container_cluster" "primary" {
       ]
     }
 
-    management {
-      auto_repair  = false
-      auto_upgrade = false
-    }
+    #management {
+    #  auto_repair  = false
+     # auto_upgrade = false
+    #}
   }
 
 }
